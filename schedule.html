@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="width=1600">
+    <meta name="robots" content="noindex, nofollow">
+    <title>충전 스케줄링 &#58; 전기버스 배터리 미래상태 예측 시스템</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+	<div class="layout-sidebar">
+        <a href="index.html" class="header">
+            <img src="images/logo.png" alt="그린베이스">
+            <h1>전기버스 배터리<span>미래상태 예측 시스템</span></h1>
+        </a>
+        <ul class="menu">
+            <li>
+                <a href="index.html"><i class="material-icons">battery_charging_full</i>배터리 현재 상태</a>
+            </li>
+            <li>
+                <a href="future.html"><i class="material-icons">bar_chart</i>미래 상태 예측</a>
+            </li>
+            <li>
+                <a href="route.html"><i class="material-icons">route</i>노선 분석</a>
+            </li>
+            <li>
+                <a href="schedule.html" class="active"><i class="material-icons">schedule</i>충전 스케줄링</a><!--선택한 페이지에 active 클래스를 추가해 주세요.-->
+            </li>
+            <li>
+                <a href="schedule-setting.html"><i class="material-icons">manage_history</i>운행 일정 설정</a>
+            </li>
+            <li>
+                <a href="setting.html"><i class="material-icons">settings</i>설정</a>
+            </li>
+            <li>
+                <a href="members.html"><i class="material-icons">people</i>회원관리</a>
+            </li>
+            <li>
+                <a href="mypage.html"><i class="material-icons">face</i>마이페이지</a>
+            </li>
+        </ul>
+        <div class="footer">
+            <button type="button"><i class="material-icons">logout</i>로그아웃</button>
+        </div>
+    </div>
+
+	<div class="layout-content has-searchform">
+
+		<div class="body">
+
+            <div class="form-check">
+                <div class="body">
+                    <form>
+                        <ul class="static-width">
+                            <li class="form-item">
+                                <label for="line-number">노선</label>
+                                <div class="select-container">
+                                    <select id="line-number">
+                                        <option disabled selected>선택</option>
+                                        <option>360</option>
+                                        <option></option>
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </li>
+                        </ul>
+                        <button type="submit" class="btn-h52 btn-icon btn-primary"><i>search</i></button>
+                    </form>
+                </div><!--//body-->
+                <div class="img car">
+                    <!--사진 
+                        - 기본값 : 없음 - 측정하기 전에는 노출 안함
+                        - '측정(돋보기 아이콘)' 버튼을 누르면 노출-->
+                    <img src="images/sample-bus.jpg" alt="">
+                </div>
+            </div><!--//form-check-->
+
+            <div class="section-wrap">
+                <div class="page-header">
+                    <h1>충전 스케줄링<span class="color-primary">360번</span></h1>
+                </div>
+
+                <!--데이터 불러오기 전, 내용 없는 경우 노출
+                    - 바로 아래의 '<div class="section chart">, <hr class="gutter-large">' 등 다른 코드 대신 노출되게 처리해 주세요. (디자인 시안 참고)
+                -->
+                <!-- <div class="empty">
+                    <img src="images/ico-empty.png" alt="">
+                    <h6>표시할 내용이 없습니다.</h6>
+                    <p>조회할 항목을 선택해 주세요.</p>
+                </div> -->
+
+                <div class="section chart">
+                    <div class="header">
+                        <h3>운행 일정</h3>
+                    </div>
+                    <div class="body">
+                        <div class="chart-wrap">
+
+                            <!--차트 넣을 위치
+                                - 크기 : 너비 100%, 높이 가변
+                                - 시간 라벨 :
+                                    - 텍스트 : 14px #000
+                                    - 라인색 : rgba(#000,0.1)
+                                - 노선별 (행) :
+                                    - 높이 : 52px
+                                    - 노선 번호 : 16px bold #000 / 노선 번호 영역 내 좌우 padding 24px
+                                    - 배경색 : 홀수행 #F6F6F6 / 짝수행 #fff
+                                - 회차/충전 cell :
+                                    - 높이 : 28px
+                                    - 텍스트 크기 : 14px
+                                    - 회차 : 배경 #fff, 테두리 #e1e1e1, 텍스트 #000
+                                    - 충전 : 배경 #336F51, 텍스트 #fff
+                            -->
+                            <img src="images/sample-chart-schedule.png"><!--차트 적용하면 삭제해 주세요. (디자인 확인용)-->
+                        </div>
+                    </div><!--//body-->
+                </div><!--//section-->
+                <hr class="gutter-large">
+                <div class="section chart">
+                    <div class="header">
+                        <h3>운행 일정 조정</h3>
+                    </div>
+                    <div class="body">
+
+                        <form>
+                            <div class="form-schedule">
+                                <button type="button" class="btn-h52 btn-primary">회차</button>
+                                <button type="button" class="btn-h52 btn-outline">SOC</button>
+                                <ul>
+                                    <li class="form-item underline">
+                                        <input type="number" id="start-soc" class="field" placeholder=" ">
+                                        <label for="start-soc" class="label">시작 SOC</label>
+                                    </li>
+                                    <li class="form-item underline">
+                                        <input type="number" id="minimum-soc" class="field" placeholder=" ">
+                                        <label for="minimum-soc" class="label">최소 SOC</label>
+                                    </li>
+                                    <li class="form-item underline">
+                                        <input type="number" id="interval" class="field" placeholder=" ">
+                                        <label for="interval" class="label">배차간격(분)</label>
+                                    </li>
+                                    <li class="form-item underline">
+                                        <input type="number" id="run-time" class="field" placeholder=" ">
+                                        <label for="run-time" class="label">운행시간(분)</label>
+                                    </li>
+                                </ul>
+                            </div>
+                            <hr class="gutter-small">
+                            <div class="chart-wrap">
+                                
+                                <div class="align-side">
+                                    <button type="button" class="btn-h36 btn-primary"><i>drag_indicator</i><span>충전</span></button>
+                                    <ul class="right list-label horizontal">
+                                        <li class="chart-label line light-orange">
+                                            <span>경부하</span>
+                                        </li>
+                                        <li class="chart-label line orange">
+                                            <span>중부하</span>
+                                        </li>
+                                        <li class="chart-label line red">
+                                            <span>과부하</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <hr class="gutter-small">
+                                
+                                <!--차트 넣을 위치
+                                    - 크기 : 너비 100%, 높이 가변
+                                    - 시간 라벨 :
+                                        - 텍스트 : 14px #000
+                                        - 라인색 : rgba(#000,0.1)
+                                    - 경/중/과부하 line :
+                                        - 높이 : 8px
+                                        - 경부하 : #DDC5BB
+                                        - 중부하 : #D69054
+                                        - 과부하 : #802822
+                                    - 노선별 (행) :
+                                        - 높이 : 52px
+                                        - 노선 번호 : 16px bold #000 / 노선 번호 영역 내 좌우 padding 24px
+                                        - 배경색 : 홀수행 #F6F6F6 / 짝수행 #fff
+                                    - 회차/충전 cell :
+                                        - 높이 : 28px
+                                        - 텍스트 크기 : 14px
+                                        - 회차 : 배경 #fff, 테두리 #e1e1e1, 텍스트 #000
+                                        - 충전 : 배경 #336F51, 텍스트 #fff
+                                            - 아이콘 코드(충전 버튼 안에 추가해 주세요) : <i class="material-icons">drag_indicator</i>
+                                -->
+                                <img src="images/sample-chart-schedule-edit.png"><!--차트 적용하면 삭제해 주세요. (디자인 확인용)-->
+                            </div><!--//chart-wrap-->
+                            <hr class="gutter-small">
+                            <div class="summary">
+                                <dl>
+                                    <dt>충전 비용</dt>
+                                    <dd>540,054<span>원</span></dd>
+                                </dl>
+                                <dl>
+                                    <dt>충전 횟수</dt>
+                                    <dd>23<span>회</span></dd>
+                                </dl>
+                                <dl>
+                                    <dt>전체 휴게 시간</dt>
+                                    <dd>123<span>분</span></dd>
+                                </dl>
+                                <div class="button-group">
+                                    <a data-bs-toggle="modal" data-bs-target="#modalCompare" class="btn-h36 btn-outline">비교 확인</a>
+                                    <a data-bs-toggle="modal" data-bs-target="#modalTableView" class="btn-h36 btn-outline">테이블 보기</a>
+                                    <a data-bs-toggle="modal" data-bs-target="#modalAIschedule" class="btn-h36 btn-outline">AI 스케줄</a>
+                                    <button type="button" class="btn-h36 btn-outline">엑셀 다운로드</button>
+                                </div>
+                            </div><!--//summary-->
+
+                        </form>
+
+                    </div><!--//body-->
+                </div><!--//section-->
+            </div><!--//section-wrap-->
+        </div><!--//body-->
+
+	</div><!--//layout-content-->
+
+    <!-- Modal -->
+	<div class="modal fade modal-schedule" id="modalCompare" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<form>
+                    <div class="modal-header">
+                        <h5 class="modal-title">비교 확인</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">close</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="summary">
+                            <dl>
+                                <dt>충전 비용</dt>
+                                <dd>540,054<span>원</span></dd>
+                            </dl>
+                            <dl>
+                                <dt>충전 횟수</dt>
+                                <dd>23<span>회</span></dd>
+                            </dl>
+                            <dl>
+                                <dt>전체 휴게 시간</dt>
+                                <dd>123<span>분</span></dd>
+                            </dl>
+                        </div><!--//summary-->
+                        <hr class="gutter-medium">
+                        <div class="scroll-y">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">차량</th>
+                                        <th scope="col" class="nowrap">회차</th>
+                                        <th scope="col">구분</th>
+                                        <th scope="col">시작 시간</th>
+                                        <th scope="col">종료 시간</th>
+                                        <th scope="col">SOC(%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div><!--//scroll-y-->
+                    </div><!--//modal-body-->
+                </form>
+			</div><!--//modal-content-->
+		</div>
+	</div>
+
+    <div class="modal fade modal-schedule" id="modalTableView" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<form>
+                    <div class="modal-header">
+                        <h5 class="modal-title">테이블 보기</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">close</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="summary">
+                            <dl>
+                                <dt>충전 비용</dt>
+                                <dd>540,054<span>원</span></dd>
+                            </dl>
+                            <dl>
+                                <dt>충전 횟수</dt>
+                                <dd>23<span>회</span></dd>
+                            </dl>
+                            <dl>
+                                <dt>전체 휴게 시간</dt>
+                                <dd>123<span>분</span></dd>
+                            </dl>
+                        </div><!--//summary-->
+                        <hr class="gutter-medium">
+                        <div class="scroll-y">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">차량</th>
+                                        <th scope="col" class="nowrap">회차</th>
+                                        <th scope="col">구분</th>
+                                        <th scope="col">시작 시간</th>
+                                        <th scope="col">종료 시간</th>
+                                        <th scope="col">SOC(%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div><!--//scroll-y-->
+                    </div><!--//modal-body-->
+                </form>
+			</div><!--//modal-content-->
+		</div>
+	</div>
+
+    <div class="modal fade modal-schedule" id="modalAIschedule" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<form>
+                    <div class="modal-header">
+                        <h5 class="modal-title">AI 스케줄</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">close</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="summary">
+                            <dl>
+                                <dt>충전 비용</dt>
+                                <dd>540,054<span>원</span></dd>
+                            </dl>
+                            <dl>
+                                <dt>충전 횟수</dt>
+                                <dd>23<span>회</span></dd>
+                            </dl>
+                            <dl>
+                                <dt>전체 휴게 시간</dt>
+                                <dd>123<span>분</span></dd>
+                            </dl>
+                        </div><!--//summary-->
+                        <hr class="gutter-medium">
+                        <div class="scroll-y">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">차량</th>
+                                        <th scope="col" class="nowrap">회차</th>
+                                        <th scope="col">구분</th>
+                                        <th scope="col">시작 시간</th>
+                                        <th scope="col">종료 시간</th>
+                                        <th scope="col">SOC(%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">5578</th>
+                                        <td>1</td>
+                                        <td>운행</td>
+                                        <td class="nowrap">2023-06-01 15:00:00</td>
+                                        <td class="nowrap">2023-06-01 15:05:00</td>
+                                        <td>8.5</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div><!--//scroll-y-->
+                    </div><!--//modal-body-->
+                </form>
+			</div><!--//modal-content-->
+		</div>
+	</div>
+	<!--//modal-->
+</body>
+</html>

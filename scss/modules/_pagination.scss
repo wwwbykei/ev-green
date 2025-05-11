@@ -1,0 +1,46 @@
+// ---
+// modules - pagination
+// ---
+
+@mixin pagination-oval {
+    overflow: hidden;
+    text-align: center;
+    ul {
+        display: inline-block;
+    }
+    li {
+        display: block;
+        float: left;
+        width: $pagination-size;
+        height: $pagination-size;
+    }
+    a {
+        display: block;
+        color: $pagination-font-color;
+        font-size: $pagination-font-size;
+        &,
+        i {
+            line-height: $pagination-size;
+        }
+        &.active {
+            border-radius: 50%;
+            background-color: $pagination-bgcolor-active;
+            @include fw-bold;
+            color: $pagination-font-color-active;
+        }
+        &.disabled{
+            opacity:.2;
+            cursor: default;
+        }
+    }
+    i {
+        @include material-icons;
+        font-size: $pagination-arrow-size;
+        color: $pagination-arrow-color;
+    }
+}
+
+.pagination {
+    margin-top: $pagination-gutter;
+    @include pagination-oval;
+}

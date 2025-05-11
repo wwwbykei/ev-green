@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="width=1600">
+    <meta name="robots" content="noindex, nofollow">
+    <title>전기버스 배터리 미래상태 예측 시스템</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+	<div class="layout-sidebar">
+        <a href="index.html" class="header">
+            <img src="images/logo.png" alt="그린베이스">
+            <h1>전기버스 배터리<span>미래상태 예측 시스템</span></h1>
+        </a>
+        <ul class="menu">
+            <li>
+                <a href="index.html" class="active"><i class="material-icons">battery_charging_full</i>배터리 현재 상태</a><!--선택한 페이지에 active 클래스를 추가해 주세요.-->
+            </li>
+            <li>
+                <a href="future.html"><i class="material-icons">bar_chart</i>미래 상태 예측</a>
+            </li>
+            <li>
+                <a href="route.html"><i class="material-icons">route</i>노선 분석</a>
+            </li>
+            <li>
+                <a href="schedule.html"><i class="material-icons">schedule</i>충전 스케줄링</a>
+            </li>
+            <li>
+                <a href="schedule-setting.html"><i class="material-icons">manage_history</i>운행 일정 설정</a>
+            </li>
+            <li>
+                <a href="setting.html"><i class="material-icons">settings</i>설정</a>
+            </li>
+            <li>
+                <a href="members.html"><i class="material-icons">people</i>회원관리</a>
+            </li>
+            <li>
+                <a href="mypage.html"><i class="material-icons">face</i>마이페이지</a>
+            </li>
+        </ul>
+        <div class="footer">
+            <button type="button"><i class="material-icons">logout</i>로그아웃</button>
+        </div>
+    </div>
+
+	<div class="layout-content has-searchform">
+
+        <div class="progress"></div><!--'측정' 버튼 누른 다음, 데이터 불러오기 전까지만 노출-->
+
+		<div class="body">
+
+            <div class="form-check">
+                <div class="body">
+                    <form>
+                        <ul>
+                            <li class="form-item">
+                                <label for="line-number">노선</label>
+                                <div class="select-container">
+                                    <select id="line-number">
+                                        <option disabled selected>선택</option>
+                                        <option>360</option>
+                                        <option></option>
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="form-item">
+                                <label for="car-number">차량 번호</label>
+                                <div class="select-container">
+                                    <select id="car-number">
+                                        <option disabled selected>선택</option>
+                                        <option>12고3456</option>
+                                        <option></option>
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="form-item">
+                                <label for="sequence">회차</label>
+                                <div class="select-container">
+                                    <select id="sequence">
+                                        <option disabled selected>선택</option>
+                                        <option>1회차</option>
+                                        <option></option>
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="form-item">
+                                <label for="date" class="label">날짜</label>
+                                <input type="date" id="date" class="field" placeholder=" " value="2023-11-23">
+                            </li>
+                        </ul>
+                        <button type="submit" class="btn-h52 btn-icon btn-primary"><i>search</i></button>
+                    </form>
+                </div><!--//body-->
+                <div class="img car">
+                    <!--사진 
+                        - 기본값 : 없음 - 측정하기 전에는 노출 안함
+                        - '측정(돋보기 아이콘)' 버튼을 누르면 노출-->
+                    <img src="images/sample-bus.jpg" alt="">
+                </div>
+            </div><!--//form-check-->
+
+            <!--측정 결과 영역 시작-->
+            <div class="section-wrap">
+                <div class="page-header">
+                    <h1>배터리 현재 상태</h1>
+                </div>
+                <div class="section chart">
+                    <div class="header">
+                        <h3>배터리 팩</h3>
+                    </div>
+                    <div class="body">
+                        <div class="chart-wrap">
+
+                            <!--데이터 불러오기 전, 내용 없는 경우 노출-->
+                            <!-- <div class="empty">
+                                <h6>표시할 내용이 없습니다.</h6>
+                                <p>조회할 항목을 선택해 주세요.</p>
+                            </div> -->
+
+                            <!--차트 넣을 위치
+                                - 크기 : 너비 100%, 높이 480px
+                                - x/y축 라인색 : rgba(#000,0.1)
+                                - x/y축 라벨 : 14px rgba(#000, 0.4)
+                                - 차트 라인 두께 : 2px
+                                - 차트 라인 색 : 
+                                    - 정상 범위 : rgba(#336F51, 0.08)
+                                    - 전압 : #D69054
+                                    - 나머지 : #336F51, #000
+                            -->
+                            차트용 소스: <div class="bubble red">과전류</div><button type="button" class="material-icons btn-drag-horizontal">drag_handle</button>
+                            <img src="images/sample-chart-battery.png"><!--차트 적용하면 삭제해 주세요. (디자인 확인용)-->
+                        </div>
+
+                        <ul class="list-label vertical">
+                            <li class="chart-label rectangle color-primary-8">
+                                <span>정상 범위</span>
+                            </li>
+                            <li class="chart-label line orange">
+                                <span>전압</span>
+                            </li>
+                            <li><hr class="line"></li>
+                            <li class="chart-label line dash-4-4 color-primary-40">
+                                <label class="toggle">
+                                    <span>전류</span>
+                                    <input role="switch" type="checkbox" checked><!--'checked'를 추가하면 체크한 상태로 로딩됨-->
+                                </label>
+                            </li>
+                            <li class="chart-label line color-primary">
+                                <label class="toggle">
+                                    <span>SOC</span>
+                                    <input role="switch" type="checkbox">
+                                </label>
+                            </li>
+                            <li class="chart-label line dash-4-4 color-primary">
+                                <label class="toggle">
+                                    <span>V센서</span>
+                                    <input role="switch" type="checkbox">
+                                </label>
+                            </li>
+                            <li class="chart-label line dash-8-12 color-primary">
+                                <label class="toggle">
+                                    <span>팩용량</span>
+                                    <input role="switch" type="checkbox">
+                                </label>
+                            </li>
+                            <li class="chart-label line dash-4-4">
+                                <label class="toggle">
+                                    <span>온도 1</span>
+                                    <input role="switch" type="checkbox">
+                                </label>
+                            </li>
+                            <li class="chart-label line">
+                                <label class="toggle">
+                                    <span>온도 2</span>
+                                    <input role="switch" type="checkbox">
+                                </label>
+                            </li>
+                        </ul>
+                    </div><!--//body-->
+                </div><!--//section-->
+                <hr class="gutter-large">
+                <div class="section chart">
+                    <div class="header">
+                        <h3>모듈 정보</h3>
+                    </div>
+                    <div class="body">
+                        <div class="chart-wrap">
+
+                            <!--데이터 불러오기 전, 내용 없는 경우 노출-->
+                            <!-- <div class="empty">
+                                <h6>표시할 내용이 없습니다.</h6>
+                                <p>조회할 항목을 선택해 주세요.</p>
+                            </div> -->
+
+                            <!--차트 넣을 위치
+                                - 크기 : 너비 100%, 높이 480px
+                                - x/y축 라인색 : rgba(#000,0.1)
+                                - x/y축 라벨 : 14px rgba(#000, 0.4)
+                                - 차트 라인 두께 : 2px
+                                - 차트 라인 색 : #802822, #D69054, #E5C348, #98AB4C, #4DCC4B, #2E7DD9, #B264BF, #C23188
+                                - 차트 라인 스타일 : dash / solid 를 번갈아서 사용 (예: 1번째 dash, 2번째 solid, 3번째 dash...)
+                            -->
+                            차트용 소스: <div class="bubble red">#4. 성능 저하</div>
+                            <img src="images/sample-chart-module.png"><!--차트 적용하면 삭제해 주세요. (디자인 확인용)-->
+                            <div class="label-wrap">
+                                <ul class="list-label horizontal">
+                                    <li class="chart-label line dash-4-4 red">
+                                        <span>모듈 1</span>
+                                    </li>
+                                    <li class="chart-label line red">
+                                        <span>모듈 2</span>
+                                    </li>
+                                    <li class="chart-label line dash-4-4 brown">
+                                        <span>모듈 3</span>
+                                    </li>
+                                    <li class="chart-label line brown">
+                                        <span>모듈 4</span>
+                                    </li>
+                                    <li class="chart-label line dash-4-4 yellow">
+                                        <span>모듈 5</span>
+                                    </li>
+                                    <li class="chart-label line yellow">
+                                        <span>모듈 6</span>
+                                    </li>
+                                    <li class="chart-label line dash-4-4 yellow-green">
+                                        <span>모듈 7</span>
+                                    </li>
+                                    <li class="chart-label line yellow-green">
+                                        <span>모듈 8</span>
+                                    </li>
+                                </ul><!--//list-label-->
+                                <ul class="list-label horizontal">
+                                    <li class="chart-label line dash-4-4 vivid-green">
+                                        <span>모듈 9</span>
+                                    </li>
+                                    <li class="chart-label line vivid-green">
+                                        <span>모듈 10</span>
+                                    </li>
+                                    <li class="chart-label line dash-4-4 blue">
+                                        <span>모듈 11</span>
+                                    </li>
+                                    <li class="chart-label line blue">
+                                        <span>모듈 12</span>
+                                    </li>
+                                    <li class="chart-label line dash-4-4 violet">
+                                        <span>모듈 13</span>
+                                    </li>
+                                    <li class="chart-label line violet">
+                                        <span>모듈 14</span>
+                                    </li>
+                                    <li class="chart-label line dash-4-4 magenta">
+                                        <span>모듈 15</span>
+                                    </li>
+                                    <li class="chart-label line magenta">
+                                        <span>모듈 16</span>
+                                    </li>
+                                </ul><!--//list-label-->
+                            </div><!--//label-wrap-->
+                        </div>
+
+                        <ul class="list-label vertical">
+                            <li class="chart-label">
+                                <label class="toggle">
+                                    <span>모듈 1 - 14</span>
+                                    <input role="switch" type="checkbox">
+                                </label>
+                            </li>
+                            <li><hr class="line"></li>
+                            <li class="chart-label">
+                                <label class="toggle">
+                                    <span>모듈 15 - 16</span>
+                                    <input role="switch" type="checkbox">
+                                </label>
+                            </li>
+                        </ul>
+                    </div><!--//body-->
+                </div><!--//section-->
+            </div><!--//section-wrap-->
+            <!--//측정 결과 영역 끝-->
+
+        </div><!--//body-->
+
+	</div><!--//layout-content-->
+</body>
+</html>
